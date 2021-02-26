@@ -3,6 +3,7 @@ from selenium import webdriver
 from BeautifulSoup import BeautifulSoup
 import csv
 import pandas as pd
+import time
 
 # Global variables
 url = "https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/l?latitude=40.4096&longitude=-3.6862&combinedLocationIds=724,14,28,173,0,28079,0,0,0"
@@ -33,7 +34,7 @@ class HouseScraper():
             writer.writeheader()
 
             page_url = self.start_url
-
+            i = 0
             while page_url:
 
                 # Call scrap_page function
@@ -46,10 +47,11 @@ class HouseScraper():
                 driver.get(page_url)
                 time.sleep(5)
                 soup = BeautifulSoup(driver.page_source, 'html.parser')
-                tmp = soup.find('div', attrs={ class = "re-Card re-Card--compact re-Card--landscape is-preloaded" })
-                if tmp == None:
+                tmp = soup.find('div', attrs={ 'class': 're-Card re-Card--compact re-Card--landscape is-preloaded' })
+                if i == 2:
+                #if tmp == None:
                     break
-
+                i = i + 1
                 soup2 = BeautifulSoup(tmp)
                 tmp2 = soup2.find('a')
 
@@ -60,6 +62,14 @@ class HouseScraper():
     def scrap_page(self, page_url):
 
         # Getting whole information (HTML) in page_url
-
-
+        driver.get(page_url)
+        soup = BeautifulSoup(driver.page_source, 'html_parser')
+        
         # Searching information
+        # Price
+        price = soup.find('span', attrs = { 'class':'re-DetailHeader-price' })
+        
+        # Header
+        header = soup.findAll('li', attrs = { 'class': 're-DetailHeader-featuresItem'})
+        print(header)
+        
