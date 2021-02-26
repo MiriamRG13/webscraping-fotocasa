@@ -4,6 +4,7 @@ from BeautifulSoup import BeautifulSoup
 import csv
 import pandas as pd
 import time
+import page_url
 
 # Global variables
 url = "https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/l?latitude=40.4096&longitude=-3.6862&combinedLocationIds=724,14,28,173,0,28079,0,0,0"
@@ -59,7 +60,7 @@ class HouseScraper():
 
             print('end')
 
-    def scrap_page(self, page_url):
+    def scrap_page(self, page_url, district):
 
         # Getting whole information (HTML) in page_url
         driver.get(page_url)
