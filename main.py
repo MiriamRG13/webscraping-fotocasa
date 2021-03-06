@@ -1,76 +1,91 @@
 # Import libraries
 from selenium import webdriver
-from BeautifulSoup import BeautifulSoup
+from selenium.webdriver.firefox.options import Options
+# import requests
+from bs4 import BeautifulSoup
 import csv
-import pandas as pd
+#import pandas as pd
 import time
-import page_url
+# from page_url import scrap_page
+import os
 
 # Global variables
+SCROLL_PAUSE_TIME = 0.5
 url = "https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/l?latitude=40.4096&longitude=-3.6862&combinedLocationIds=724,14,28,173,0,28079,0,0,0"
-time.sleep(30)
+# time.sleep(2)
 
 # Configuration of webdriver to use Mozilla Firefox browser
-driver = webdriver.Firefox()
+driver = webdriver.Firefox(executable_path = 'C:/WebDriver/bin/geckodriver.exe')
+
+# #Go to specific URL
 driver.get(url)
+time.sleep(10)
 
-# Class Definition
-class HouseScraper():
+driver.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div/div[2]/button[2]').click()
+time.sleep(3)
+screen_height = driver.execute_script("return window.screen.height;")   # get the screen height of the web
+i = 1
 
-    # Initial function
-    def __init__(self):
-        self.start_url = url
-        self.base_url = "https://www.fotocasa.es"
+while True:
+    # scroll one screen height each time
+    driver.execute_script("window.scrollTo(0, {screen_height}*{i});".format(screen_height=screen_height, i=i))  
+    i += 1
+    time.sleep(SCROLL_PAUSE_TIME)
+    # update scroll height each time after scrolled, as the scroll height can change after we scrolled the page
+    scroll_height = driver.execute_script("return document.body.scrollHeight;")  
+    # Break the loop when the height we need to scroll to is larger than the total scroll height
+    if (screen_height) * i > scroll_height:
+        break
+pisos = driver.find_elements_by_class_name('re-Card-link')
+print(pisos[1].get_attribute('href'))
 
-    # Scrape function
-    def scrape(self):
 
-        # Writting csv headers
-        if os.path.exists('buildings_information.csv'):
-            os.remove('buildings_information.csv')
+# for e in pisos:
+#     print(e.text)
 
-        with open("buildings_information.csv", "a") as csv_file:
-            headers = ["Price", "Name", "Neighborhood", "Address", "Link"]
-            writer = csv.DictWriter(csv_file, fieldnames = headers)
-            writer.writeheader()
 
-            page_url = self.start_url
-            i = 0
-            while page_url:
+# tmp=pisos[1].find_element_by_tag_name('a') #hay que extraer el href
+# print(len(buildings))
+# print(pisos[4].text)
 
-                # Call scrap_page function
-                buildings = self.scrap_page(page_url)
 
-                # Save information in csv file
-                writer.writerow(buildings)
+# Without Selenium
+# page = requests.get(url)
+# soup = BeautifulSoup(page, 'html.parser')
+# elementos = soup.findAll('article')
+# print(len(elementos))
 
-                # Getting next page's url
-                driver.get(page_url)
-                time.sleep(5)
-                soup = BeautifulSoup(driver.page_source, 'html.parser')
-                tmp = soup.find('div', attrs={ 'class': 're-Card re-Card--compact re-Card--landscape is-preloaded' })
-                if i == 2:
-                #if tmp == None:
-                    break
-                i = i + 1
-                soup2 = BeautifulSoup(tmp)
-                tmp2 = soup2.find('a')
+# base_url = "https://www.fotocasa.es"
 
-                page_url = self.base_url + tmp2.attrs['href']
+# Writting csv headers
+#if os.path.exists('buildings_information.csv'):
+    #os.remove('buildings_information.csv')
 
-            print('end')
+#with open("buildings_information.csv", "a") as csv_file:
+    #headers = ['Precio', 'Distrito','Tipo de inmueble', 'Habitaciones', 'Aseos', 'Superficie', 'Planta', 'Parking']
+    #writer = csv.DictWriter(csv_file, fieldnames = headers)
+    #writer.writeheader()
 
-    def scrap_page(self, page_url, district):
+# Getting next page's url
 
-        # Getting whole information (HTML) in page_url
-        driver.get(page_url)
-        soup = BeautifulSoup(driver.page_source, 'html_parser')
-        
-        # Searching information
-        # Price
-        price = soup.find('span', attrs = { 'class':'re-DetailHeader-price' })
-        
-        # Header
-        header = soup.findAll('li', attrs = { 'class': 're-DetailHeader-featuresItem'})
-        print(header)
-        
+#driver.get(page_url)
+#time.sleep(5)
+#soup = BeautifulSoup(url, 'html.parser')
+#print(soup.prettify())
+#page = requests.get(url).text
+# soup = BeautifulSoup(url, 'html.parser')
+# print(soup)
+#buildings = soup.findAll('div', attrs={'class':"re-Card re-Card--compact re-Card--landscape is-preloaded"})
+# print(len(buildings))
+# print(buildings[5].prettify())
+# for building in buildings:
+    
+#     path = building.find('a')
+
+#     page_url = base_url + path.attrs['href']
+
+#     # Call scrap_page function
+#     # scrap_page(self, page_url, 'Chamartin')
+  
+#     print(page_url)
+
