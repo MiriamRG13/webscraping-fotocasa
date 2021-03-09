@@ -45,13 +45,17 @@ for building in buildings:
     i += 1
     try:
         # Call scrap_page function
-        districtElement = building.find_element_by_xpath('/html/body/div[1]/div[3]/div/div[4]/div[2]/div[1]/main/div[3]/section/article[i]/div/div[2]/a/div[3]/h3/text()') # PisoChamartin o PisoCalle X, Chamartin o PisoSan Blas
-
-        print(districtElement.text)
-
-
-
-        #print(building.get_attribute('href'))
-        #scrap_page(building.get_attribute('href'), 'Chamartin')
+        districtLabel = driver.find_element_by_xpath('/html/body/div[1]/div[3]/div/div[4]/div[2]/div[1]/main/div[3]/section/article['+str(i)+']/div/div[2]/a/div[3]/h3')
+        districtWaste = ''
+        try:
+            districtWaste = districtLabel.find_element_by_tag_name('span').text
+        except:
+            pass
+            
+        districtNoWaste = districtLabel.text[len(districtWaste):len(districtLabel.text)]
+        districtSplitted = districtNoWaste.split(' ')
+        district = districtSplitted[len(districtSplitted)-1]
+        print(building.get_attribute('href'))
+        scrap_page(building.get_attribute('href'), district)
     except:
-        print('Error: Anuncio')
+        pass
