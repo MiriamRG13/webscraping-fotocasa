@@ -37,7 +37,11 @@ def scrap_page(page_url, district):
                 type = tmp[1]
                 if type == 'habs.':
                     home.rooms = number
+                if type == 'hab.':
+                    home.rooms = number
                 if type == 'baños':
+                    home.baths = number
+                if type == 'baño':
                     home.baths = number
                 if type.startswith('m'):
                     home.size = number

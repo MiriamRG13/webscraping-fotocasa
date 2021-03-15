@@ -14,17 +14,22 @@ driver = webdriver.Firefox(executable_path = 'C:/WebDriver/bin/geckodriver.exe')
 
 # Scrapping pages
 k = 1
-for k in range(1, 20):
+for k in range(1, 2):
     url='https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/l/'+str(k)+'?combinedLocationIds=724%2C14%2C28%2C173%2C0%2C28079%2C0%2C0%2C0&latitude=40.4096&longitude=-3.6862'
+    
+    print('')
+    print('')
+    print('*****  PAGINA ', k, ' *****')
+    print('')
 
     # Go to specific URL
     driver.get(url)
-    driver.fullscreen_window()
+    # driver.fullscreen_window()
     time.sleep(5)
 
     try:
         # Accept cookies
-        driver.find_element_by_xpath('/html/body/div[3]/div/div/div[2]/div/div[2]/button[2]').click()
+        driver.find_element_by_xpath('/html/body/div[3]/div/div/footer/div/button[2]').click()
         time.sleep(3)
     except:
         pass
