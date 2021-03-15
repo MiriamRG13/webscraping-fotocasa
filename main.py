@@ -11,11 +11,12 @@ SCROLL_PAUSE_TIME = 0.5
 
 # Configuration of webdriver to use Mozilla Firefox browser
 driver = webdriver.Firefox(executable_path = 'C:/WebDriver/bin/geckodriver.exe')
+
+# Scrapping pages
 k = 1
-for k in range(1, 3):
+for k in range(1, 20):
     url='https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/l/'+str(k)+'?combinedLocationIds=724%2C14%2C28%2C173%2C0%2C28079%2C0%2C0%2C0&latitude=40.4096&longitude=-3.6862'
-    #url = 'https://www.fotocasa.es/es/comprar/viviendas/madrid-capital/todas-las-zonas/'+str(k)+'?latitude=40.4096&longitude=-3.6862&combinedLocationIds=724,14,28,173,0,28079,0,0,0'
-    print(url)
+
     # Go to specific URL
     driver.get(url)
     driver.fullscreen_window()
@@ -65,8 +66,6 @@ for k in range(1, 3):
             if (district == 'Lineal' or district == 'Blas'):
                 district = districtSplitted[len(districtSplitted)-2]+' '+districtSplitted[len(districtSplitted)-1]
         
-            print(district)
-            print(building.get_attribute('href'))
             scrap_page(building.get_attribute('href'), district)
         except:
             pass

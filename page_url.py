@@ -15,7 +15,7 @@ def scrap_page(page_url, district):
     soup = BeautifulSoup(page, 'html.parser')
 
     with open('buildings_information.csv', 'a', newline='') as csv_file:
-        headers = ['Precio', 'Distrito','Tipo de inmueble', 'Habitaciones', 'Aseos', 'Superficie', 'Planta', 'Parking']
+        headers = ['Precio', 'Distrito','Tipo de inmueble', 'Habitaciones', 'Aseos', 'Superficie', 'Planta', 'Parking', 'URL']
         writer = csv.DictWriter(csv_file, fieldnames=headers)
         #writer.writeheader()
         
@@ -68,8 +68,5 @@ def scrap_page(page_url, district):
                          'Aseos':            home.baths, 
                          'Superficie':       home.size, 
                          'Planta':           home.floor,
-                         'Parking':          home.parking})
-
-        print('Precio: '   + home.price +
-              'Distrito: ' + home.district )
-  
+                         'Parking':          home.parking,
+                         'URL':              home.url})
